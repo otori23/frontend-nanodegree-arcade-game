@@ -1,0 +1,60 @@
+0) Project details provided in:
+https://docs.google.com/document/u/0/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub
+
+1) github repo
+https://github.com/udacity/frontend-nanodegree-arcade-game
+
+2) Game components
+- game components are loaded in the following order
+
+<script src="js/resources.js"></script>
+<script src="js/app.js"></script>
+<script src="js/engine.js"></script>
+
+3) Logic flow/starting point
+
+- start in Engine class
+- create canvas and add to DOM
+- load Resources (i.e. Resources.load([...])
+- define Engine.init() as callback that is executed when ALL resources are loaded (i.e. Resources.onReady(init))
+- add the canvas context to the global scope
+- Engine.init(): reset game state, register time, kick-off main game loop (i.e. Engine.main())
+- Engine.main(): register time passed since last call, update & render entities, register current time, request another call from js system
+
+4) resources.js
+- this objects manages loading image resources from disk into memory
+- acts as a caching layer for images
+- store handle to image in game memory for subsequent access requests
+
+4b) Logic
+- adds Resource object to global context i.e. window.Resources = { ... }
+- Resource exposes "public" methods; these are the methods that are accessible from Resources hash
+- methods not defined in Resource hash are considered private
+- variables defined in Resource "constructor" are considered private instance vars
+- note that the global context = window object
+
+5) app.js
+- define entities for Enemie and Player
+- define event listener for user input
+
+6) Engine.js
+- main game loop lives here
+- all of the "class" methods are "private"; they are "accessed" by the callback of Resource.load
+
+6b) Logic
+- load resources
+- set callback for load to start the main loop
+- add cavas context to global scope
+
+6c) Engine.main
+- main game loop
+
+6d) Engine.init
+- kick off main loop; called by Resource object after all images are loaded
+
+6e) Engine.update
+- update state of entities
+
+6f) Engine.render
+- draw entities and game board
+
