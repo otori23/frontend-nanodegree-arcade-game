@@ -43,18 +43,27 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.handleInput = function(dir) {
+	var canvas = document.getElementsByTagName("canvas")[0];
+	var playerImg = Resources.get(this.sprite);
 	switch(dir) {
 		case 'left':
 			this.x -= this.xStep;
+		    if(this.x < 0) this.x += this.xStep
 		    break;
 		case 'up':
 			this.y -= this.yStep;
+		    if(this.y < 0) {
+				this.x = this.xStart;
+				this.y = this.yStart;
+			}
 		    break;
 		case 'right':
 			this.x += this.xStep;
+		    if(this.x > canvas.width - playerImg.width) this.x -= this.xStep
 		    break;
 		case 'down':
 			this.y += this.yStep;
+			if(this.y > canvas.height - playerImg.height) this.y -= this.yStep
 			break;
 		default:
 			break;
