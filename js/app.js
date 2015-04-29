@@ -25,10 +25,13 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-
 	this.sprite = 'images/char-boy.png';
-	this.x = 300;
-	this.y = 300;
+	this.xStep = 101;
+	this.yStep = 83;
+	this.xStart = 2*this.xStep;
+	this.yStart = 5*this.yStep - 20;
+	this.x = this.xStart;
+	this.y = this.yStart;
 };
 
 Player.prototype.update = function() {
@@ -37,6 +40,25 @@ Player.prototype.update = function() {
 
 Player.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Player.prototype.handleInput = function(dir) {
+	switch(dir) {
+		case 'left':
+			this.x -= this.xStep;
+		    break;
+		case 'up':
+			this.y -= this.yStep;
+		    break;
+		case 'right':
+			this.x += this.xStep;
+		    break;
+		case 'down':
+			this.y += this.yStep;
+			break;
+		default:
+			break;
+	}
 };
 
 // Now instantiate your objects.
