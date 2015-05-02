@@ -1,0 +1,14 @@
+1) app.js
+
+- add an abstract Entity class
+- all game entities will inherit from the abstract entity class (Player, Enemy, etc)
+- use pseudoclassical class pattern to implement inheritance hierarchy
+- add a utility class (ApplicationException) used for throwing application exceptions
+- add a method to the Array class (randomElement), the returns a randomly selected element from the array
+- add a method to the Player class that can check if the player collides with a specified entity
+- synchronize eventhandler for player movement with the player update method
+- (eventhandler logs move direction; players update method updates the player's position)
+ 
+2) engine.js
+
+- implement checkCollisions method
