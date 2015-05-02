@@ -98,6 +98,23 @@ Player.prototype.handleInput = function(dir) {
 	}
 };
 
+Player.prototype.collidesWith = function(enemy) {
+	var playerImg = Resources.get(this.sprite);
+	var enemyImg = Resources.get(enemy.sprite);
+    
+	return !( 
+		(enemy.x + this.xStep < player.x + 50)   ||
+		(enemy.x > player.x + 50)  ||
+		(enemy.y > player.y + 40) ||
+		(enemy.y + this.yStep < player.y + 40)
+	);
+};
+
+Player.prototype.resetPosition = function() {
+	this.x = this.xStart;
+	this.y = this.yStart;
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
