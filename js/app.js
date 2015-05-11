@@ -246,8 +246,6 @@ PlayerStats.prototype.render = function() {
 
 var GameEndBanner = function() {
 	Entity.call(this);
-	this.x = 0;
-	this.y = 0;
 };
 
 // link parts of GameEndBanner and Entity that are same for instances
@@ -255,33 +253,31 @@ GameEndBanner.prototype = Object.create(Entity.prototype); // GameEndBanner.prot
 
 // The default prototype which we overwrote in previous line came with a .constructor property
 // We need to add this back to our version of the protptype object
-PlayerStats.prototype.constructor = Entity;
+GameEndBanner.prototype.constructor = Entity;
 
-PlayerStats.prototype.update = function(dt) {
-	this.score = this.player.getScore();
-	this.lives = this.player.getLives();
+GameEndBanner.prototype.update = function(dt) {
+	// do nothing
 };
 
-PlayerStats.prototype.render = function() {
+GameEndBanner.prototype.render = function() {
 	ctx.save();
-	
+
 	var canvas = document.getElementsByTagName("canvas")[0];
+	this.x = 0.25*canvas.width;
+	this.y = 0.25*canvas.height;
+	this.width = 0.5*canvas.width;
+	this.height = 0.5*canvas.height;
 
-	// Score
-	ctx.font = "36pt serif";
-	ctx.textAlign = "left";
-	ctx.fillStyle = "blue";
-	ctx.fillText(this.score.toLocaleString(), this.x, this.y);
+	// Background
+	ctx.fillStyle = "white";
+	ctx.fillRect(this.x, this.y, this.width, this.height);
 	
-	// Lives
-	ctx.textAlign = "right";
-	ctx.fillStyle = "red";
-	ctx.fillText(this.lives.toLocaleString(), this.x + canvas.width - 50, this.y);
-
-	// Heart
-	var heartScale = 1/3;
-	ctx.scale(heartScale, heartScale);
-	ctx.drawImage(Resources.get('images/Heart.png'), this.x + (canvas.width/heartScale) - 125, this.y - 60);
+	// Message
+	ctx.translate(this.x, this.y);
+	ctx.font = "36pt serif";
+	ctx.textAlign = "center";
+	ctx.fillStyle = "blue";
+	ctx.fillText("Press Esc", this.width/2, this.height/2);
 
 	ctx.restore();
 };
@@ -320,3 +316,4 @@ function ApplicationException(message) {
 var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 var player = new Player();
 var playerStats = new PlayerStats(player);
+var gameEndBanner = new GameEndBanner();

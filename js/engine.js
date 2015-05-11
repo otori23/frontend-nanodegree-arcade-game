@@ -172,6 +172,10 @@ var Engine = (function(global) {
 
         player.render();
 		playerStats.render();
+		
+		if(player.getLives() === 0){
+			gameEndBanner.render();
+		}
     }
 
     /* This function does nothing but it could have been a good place to
