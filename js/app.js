@@ -109,6 +109,11 @@ Player.prototype.constructor = Entity;
 // As the player position is updated, make sure that player stays within the bounds of the game.
 // If the player falls into the water, reset the position to start position
 Player.prototype.update = function() {
+	if(this.lives === 0){
+		this.x = -this.xStep;
+		return;
+	}
+
 	var canvas = document.getElementsByTagName("canvas")[0];
 	var playerImg = Resources.get(this.sprite);
 	switch(this.moveEvent) {
@@ -138,18 +143,28 @@ Player.prototype.update = function() {
 };
 
 // Store the move direction from the keyup event-handler in a state variable of the Player instance 
-Player.prototype.handleInput = function(dir) {
-	this.moveEvent = dir;
+Player.prototype.handleInput = function(cmd) {
+	if(this.lives === 0 && cmd === 'esc') {
+		this.reset();
+		return;
+	}
+	this.moveEvent = cmd;
 };
 
 // compare bounding rectangles of player and specified entity to check for a collision.
 Player.prototype.collidesWith = function(entity) {
-	return !( 
+	var collision = !( 
 		(entity.x + this.xStep < player.x + 50)   ||
 		(entity.x > player.x + 50)  ||
 		(entity.y > player.y + 40) ||
 		(entity.y + this.yStep < player.y + 40)
 	);
+
+	if(collision) {
+		this.lives--;
+		if(this.lives < 0) this.lives = 0;
+	}
+	return collision;
 };
 
 // getter for player's score
@@ -160,6 +175,23 @@ Player.prototype.getScore = function() {
 // setter for player's score
 Player.prototype.setScore = function(score) {
 	this.score = score;
+}
+
+// getter for player's score
+Player.prototype.getLives = function() {
+	return this.lives;
+}
+
+// setter for player's score
+Player.prototype.setLives = function(lives) {
+	this.lives = lives;
+}
+
+Player.prototype.reset = function() {
+	this.x = this.xStart;
+	this.y = this.yStart;
+	this.score = 0;
+	this.lives = 3;
 }
 
 // PlayerStat Class
@@ -174,7 +206,7 @@ var PlayerStats = function(player) {
 };
 
 // link parts of PlayerStat and Entity that are same for instances
-PlayerStats.prototype = Object.create(Entity.prototype); // Player.prototype obj delegates to Entity.prototype
+PlayerStats.prototype = Object.create(Entity.prototype); // PlayerStat.prototype obj delegates to Entity.prototype
 
 // The default prototype which we overwrote in previous line came with a .constructor property
 // We need to add this back to our version of the protptype object
@@ -182,17 +214,75 @@ PlayerStats.prototype.constructor = Entity;
 
 PlayerStats.prototype.update = function(dt) {
 	this.score = this.player.getScore();
+	this.lives = this.player.getLives();
 };
 
 PlayerStats.prototype.render = function() {
 	ctx.save();
 	
+	var canvas = document.getElementsByTagName("canvas")[0];
+
 	// Score
 	ctx.font = "36pt serif";
 	ctx.textAlign = "left";
-	ctx.fillStyle = "black";
-	ctx.fillText(this.score, this.x, this.y);
+	ctx.fillStyle = "blue";
+	ctx.fillText(this.score.toLocaleString(), this.x, this.y);
 	
+	// Lives
+	ctx.textAlign = "right";
+	ctx.fillStyle = "red";
+	ctx.fillText(this.lives.toLocaleString(), this.x + canvas.width - 50, this.y);
+
+	// Heart
+	var heartScale = 1/3;
+	ctx.scale(heartScale, heartScale);
+	ctx.drawImage(Resources.get('images/Heart.png'), this.x + (canvas.width/heartScale) - 125, this.y - 60);
+
+	ctx.restore();
+};
+
+// gameEndBanner Class
+//---------------------------------------------------------------------------------------------------------
+
+var GameEndBanner = function() {
+	Entity.call(this);
+	this.x = 0;
+	this.y = 0;
+};
+
+// link parts of GameEndBanner and Entity that are same for instances
+GameEndBanner.prototype = Object.create(Entity.prototype); // GameEndBanner.prototype obj delegates to Entity.prototype
+
+// The default prototype which we overwrote in previous line came with a .constructor property
+// We need to add this back to our version of the protptype object
+PlayerStats.prototype.constructor = Entity;
+
+PlayerStats.prototype.update = function(dt) {
+	this.score = this.player.getScore();
+	this.lives = this.player.getLives();
+};
+
+PlayerStats.prototype.render = function() {
+	ctx.save();
+	
+	var canvas = document.getElementsByTagName("canvas")[0];
+
+	// Score
+	ctx.font = "36pt serif";
+	ctx.textAlign = "left";
+	ctx.fillStyle = "blue";
+	ctx.fillText(this.score.toLocaleString(), this.x, this.y);
+	
+	// Lives
+	ctx.textAlign = "right";
+	ctx.fillStyle = "red";
+	ctx.fillText(this.lives.toLocaleString(), this.x + canvas.width - 50, this.y);
+
+	// Heart
+	var heartScale = 1/3;
+	ctx.scale(heartScale, heartScale);
+	ctx.drawImage(Resources.get('images/Heart.png'), this.x + (canvas.width/heartScale) - 125, this.y - 60);
+
 	ctx.restore();
 };
 
@@ -203,6 +293,7 @@ PlayerStats.prototype.render = function() {
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
+		27: 'esc',
         37: 'left',
         38: 'up',
         39: 'right',
