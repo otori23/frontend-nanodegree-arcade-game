@@ -95,6 +95,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+		playerStats.update();
     }
 
 	/* This is called by the update function  and loops through all of the
@@ -119,6 +120,8 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
+		canvas.width = canvas.width;
+
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
@@ -168,6 +171,7 @@ var Engine = (function(global) {
         });
 
         player.render();
+		playerStats.render();
     }
 
     /* This function does nothing but it could have been a good place to

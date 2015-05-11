@@ -28,6 +28,9 @@ Entity.prototype.resetPosition = function() {
 	this.y = this.yStart;
 };
 
+// Enemy Class
+//---------------------------------------------------------------------------------------------------------
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -77,6 +80,9 @@ Enemy.prototype.update = function(dt) {
 	}
 };
 
+// Player Class
+//---------------------------------------------------------------------------------------------------------
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -88,6 +94,8 @@ var Player = function() {
 	this.x = this.xStart;
 	this.y = this.yStart;
 	this.moveEvent = '';
+	this.score = 0;
+	this.lives = 3;
 };
 
 // link parts of Player and Entity that are same for instances
@@ -112,6 +120,7 @@ Player.prototype.update = function() {
 			this.y -= this.yStep;
 		    if(this.y < 0) {
 				this.resetPosition();
+				this.score++;
 			}
 		    break;
 		case 'right':
@@ -143,6 +152,53 @@ Player.prototype.collidesWith = function(entity) {
 	);
 };
 
+// getter for player's score
+Player.prototype.getScore = function() {
+	return this.score;
+}
+
+// setter for player's score
+Player.prototype.setScore = function(score) {
+	this.score = score;
+}
+
+// PlayerStat Class
+//---------------------------------------------------------------------------------------------------------
+
+var PlayerStats = function(player) {
+	Entity.call(this);
+	this.x = 0;
+	this.y = 40;
+	this.player = player;
+	this.score = player.getScore();
+};
+
+// link parts of PlayerStat and Entity that are same for instances
+PlayerStats.prototype = Object.create(Entity.prototype); // Player.prototype obj delegates to Entity.prototype
+
+// The default prototype which we overwrote in previous line came with a .constructor property
+// We need to add this back to our version of the protptype object
+PlayerStats.prototype.constructor = Entity;
+
+PlayerStats.prototype.update = function(dt) {
+	this.score = this.player.getScore();
+};
+
+PlayerStats.prototype.render = function() {
+	ctx.save();
+	
+	// Score
+	ctx.font = "36pt serif";
+	ctx.textAlign = "left";
+	ctx.fillStyle = "black";
+	ctx.fillText(this.score, this.x, this.y);
+	
+	ctx.restore();
+};
+
+//--------------------------------------------------------------------------------------------------------- 
+
+// a handleInput() method.
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
@@ -172,3 +228,4 @@ function ApplicationException(message) {
 // Place the player object in a variable called player
 var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 var player = new Player();
+var playerStats = new PlayerStats(player);
