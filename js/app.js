@@ -260,26 +260,28 @@ GameEndBanner.prototype.update = function(dt) {
 };
 
 GameEndBanner.prototype.render = function() {
-	ctx.save();
+	if(player.getLives() === 0){
+		ctx.save();
 
-	var canvas = document.getElementsByTagName("canvas")[0];
-	this.x = 0.25*canvas.width;
-	this.y = 0.25*canvas.height;
-	this.width = 0.5*canvas.width;
-	this.height = 0.5*canvas.height;
+		var canvas = document.getElementsByTagName("canvas")[0];
+		this.x = 0.25*canvas.width;
+		this.y = 0.25*canvas.height;
+		this.width = 0.5*canvas.width;
+		this.height = 0.5*canvas.height;
 
-	// Background
-	ctx.fillStyle = "white";
-	ctx.fillRect(this.x, this.y, this.width, this.height);
-	
-	// Message
-	ctx.translate(this.x, this.y);
-	ctx.font = "36pt serif";
-	ctx.textAlign = "center";
-	ctx.fillStyle = "blue";
-	ctx.fillText("Press Esc", this.width/2, this.height/2);
+		// Background
+		ctx.fillStyle = "white";
+		ctx.fillRect(this.x, this.y, this.width, this.height);
+		
+		// Message
+		ctx.translate(this.x, this.y);
+		ctx.font = "36pt serif";
+		ctx.textAlign = "center";
+		ctx.fillStyle = "blue";
+		ctx.fillText("Press Esc", this.width/2, this.height/2);
 
-	ctx.restore();
+		ctx.restore();
+	}
 };
 
 //--------------------------------------------------------------------------------------------------------- 
