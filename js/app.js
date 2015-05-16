@@ -291,7 +291,6 @@ var Collectable = function() {
 	this.score = 0;
 	this.xStart = 0;
 	this.yStart = 0;
-	this.scale = 0.50;
 	this.x = this.xStart;
 	this.y = this.yStart;
 };
@@ -303,6 +302,15 @@ Collectable.prototype = Object.create(Entity.prototype); // Collectable.prototyp
 // We need to add this back to our version of the protptype object
 Collectable.prototype.constructor = Entity;
 
+// # of pixels that translates to one step in the y direction
+Collectable.prototype.scale = 0.50;
+
+// # of pixels that translates to one step in the x direction
+Collectable.prototype.xStep = Entity.prototype.xStep / Collectable.prototype.scale;
+
+// # of pixels that translates to one step in the y direction
+Collectable.prototype.yStep = Entity.prototype.yStep / Collectable.prototype.scale;
+
 Collectable.prototype.update = function(dt) {
 	// do nothing
 };
@@ -311,7 +319,7 @@ Collectable.prototype.render = function() {
 	ctx.save();
 
     ctx.scale(this.scale, this.scale);
-	ctx.translate(this.xStep/2, this.yStep - 10);
+	ctx.translate((this.xStep*this.scale)/2, (this.yStep*this.scale) - 10);
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 	ctx.restore();
@@ -331,8 +339,8 @@ var Heart = function() {
 	this.score = 1;
 	this.sprite = 'images/Heart.png';
 
-	this.x = 0*(this.xStep/this.scale);
-	this.y = 0*(this.yStep/this.scale);
+	this.x = 0*this.xStep;
+	this.y = 0*this.yStep;
 };
 
 // link parts of Heart and Collectable that are same for instances
@@ -369,8 +377,8 @@ var BlueGem = function() {
 	this.score = 1;
 	this.sprite= 'images/Gem Blue.png';
 
-	this.x = 1*(this.xStep/this.scale);
-	this.y = 1*(this.yStep/this.scale);
+	this.x = 1*this.xStep;
+	this.y = 1*this.yStep;
 };
 
 // link parts of BlueGem and Gem that are same for instances
@@ -388,8 +396,8 @@ var GreenGem = function() {
 	this.score = 3;
 	this.sprite= 'images/Gem Green.png';
 
-	this.x = 2*(this.xStep/this.scale);
-	this.y = 2*(this.yStep/this.scale);
+	this.x = 2*this.xStep;
+	this.y = 2*this.yStep;
 };
 
 // link parts of BlueGem and Gem that are same for instances
@@ -407,8 +415,8 @@ var OrangeGem = function() {
 	this.score = 5;
 	this.sprite= 'images/Gem Orange.png';
 
-	this.x = 3*(this.xStep/this.scale);
-	this.y = 3*(this.yStep/this.scale);
+	this.x = 3*this.xStep;
+	this.y = 3*this.yStep;
 };
 
 // link parts of BlueGem and Gem that are same for instances
