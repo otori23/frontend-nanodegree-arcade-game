@@ -289,10 +289,9 @@ GameEndBanner.prototype.render = function() {
 var Collectable = function() {
 	Entity.call(this);
 	this.score = 0;
-	this.xStart = 0;
+	this.xStart = -this.xStep;
 	this.yStart = 0;
-	this.x = this.xStart;
-	this.y = this.yStart;
+	this.resetPosition();
 };
 
 // link parts of Collectable and Entity that are same for instances
@@ -338,9 +337,6 @@ var Heart = function() {
 	Collectable.call(this);
 	this.score = 1;
 	this.sprite = 'images/Heart.png';
-
-	this.x = 0*this.xStep;
-	this.y = 0*this.yStep;
 };
 
 // link parts of Heart and Collectable that are same for instances
@@ -376,9 +372,6 @@ var BlueGem = function() {
 	Gem.call(this);
 	this.score = 1;
 	this.sprite= 'images/Gem Blue.png';
-
-	this.x = 1*this.xStep;
-	this.y = 1*this.yStep;
 };
 
 // link parts of BlueGem and Gem that are same for instances
@@ -395,9 +388,6 @@ var GreenGem = function() {
 	Gem.call(this);
 	this.score = 3;
 	this.sprite= 'images/Gem Green.png';
-
-	this.x = 2*this.xStep;
-	this.y = 2*this.yStep;
 };
 
 // link parts of BlueGem and Gem that are same for instances
@@ -414,9 +404,6 @@ var OrangeGem = function() {
 	Gem.call(this);
 	this.score = 5;
 	this.sprite= 'images/Gem Orange.png';
-
-	this.x = 3*this.xStep;
-	this.y = 3*this.yStep;
 };
 
 // link parts of BlueGem and Gem that are same for instances
