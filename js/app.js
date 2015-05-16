@@ -243,7 +243,6 @@ PlayerStats.prototype.render = function() {
 
 // gameEndBanner Class
 //---------------------------------------------------------------------------------------------------------
-
 var GameEndBanner = function() {
 	Entity.call(this);
 };
@@ -283,7 +282,141 @@ GameEndBanner.prototype.render = function() {
 		ctx.restore();
 	}
 };
+//--------------------------------------------------------------------------------------------------------- 
 
+// Collectable Class
+//---------------------------------------------------------------------------------------------------------
+var Collectable = function() {
+	Entity.call(this);
+	this.score = 0;
+	this.xStart = 0;
+	this.yStart = 0;
+	this.scale = 0.50;
+	this.x = this.xStart;
+	this.y = this.yStart;
+};
+
+// link parts of Collectable and Entity that are same for instances
+Collectable.prototype = Object.create(Entity.prototype); // Collectable.prototype obj delegates to Entity.prototype
+
+// The default prototype which we overwrote in previous line came with a .constructor property
+// We need to add this back to our version of the protptype object
+Collectable.prototype.constructor = Entity;
+
+Collectable.prototype.update = function(dt) {
+	// do nothing
+};
+
+Collectable.prototype.render = function() {
+	ctx.save();
+
+    ctx.scale(this.scale, this.scale);
+	ctx.translate(this.xStep/2, this.yStep - 10);
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+	ctx.restore();
+};
+
+Collectable.prototype.updatePlayerStats = function(aPlayer) {
+	var newScore = aPlayer.getScore() + this.score;
+	aPlayer.setScore(newScore);
+};
+//--------------------------------------------------------------------------------------------------------- 
+
+
+// Heart Class
+//---------------------------------------------------------------------------------------------------------
+var Heart = function() {
+	Collectable.call(this);
+	this.score = 1;
+	this.sprite = 'images/Heart.png';
+
+	this.x = 0*(this.xStep/this.scale);
+	this.y = 0*(this.yStep/this.scale);
+};
+
+// link parts of Heart and Collectable that are same for instances
+Heart.prototype = Object.create(Collectable.prototype); // Heart.prototype obj delegates to Collectable.prototype
+
+// The default prototype which we overwrote in previous line came with a .constructor property
+// We need to add this back to our version of the protptype object
+Heart.prototype.constructor = Collectable;
+
+Heart.prototype.updatePlayerStats = function(aPlayer) {
+	var numLives = aPlayer.getLives() + this.score;
+	aPlayer.setLives(numLives);
+};
+//--------------------------------------------------------------------------------------------------------- 
+
+// Gem Class
+//---------------------------------------------------------------------------------------------------------
+var Gem = function() {
+	Collectable.call(this);
+};
+
+// link parts of Gem and Collectable that are same for instances
+Gem.prototype = Object.create(Collectable.prototype); // Gem.prototype obj delegates to Collectable.prototype
+
+// The default prototype which we overwrote in previous line came with a .constructor property
+// We need to add this back to our version of the protptype object
+Gem.prototype.constructor = Collectable;
+//--------------------------------------------------------------------------------------------------------- 
+
+// BlueGem Class
+//---------------------------------------------------------------------------------------------------------
+var BlueGem = function() {
+	Gem.call(this);
+	this.score = 1;
+	this.sprite= 'images/Gem Blue.png';
+
+	this.x = 1*(this.xStep/this.scale);
+	this.y = 1*(this.yStep/this.scale);
+};
+
+// link parts of BlueGem and Gem that are same for instances
+BlueGem.prototype = Object.create(Gem.prototype); // BlueGem.prototype obj delegates to Gem.prototype
+
+// The default prototype which we overwrote in previous line came with a .constructor property
+// We need to add this back to our version of the protptype object
+BlueGem.prototype.constructor = Gem;
+//--------------------------------------------------------------------------------------------------------- 
+
+// GreenGem Class
+//---------------------------------------------------------------------------------------------------------
+var GreenGem = function() {
+	Gem.call(this);
+	this.score = 3;
+	this.sprite= 'images/Gem Green.png';
+
+	this.x = 2*(this.xStep/this.scale);
+	this.y = 2*(this.yStep/this.scale);
+};
+
+// link parts of BlueGem and Gem that are same for instances
+GreenGem.prototype = Object.create(Gem.prototype); // GreenGem.prototype obj delegates to Gem.prototype
+
+// The default prototype which we overwrote in previous line came with a .constructor property
+// We need to add this back to our version of the protptype object
+GreenGem.prototype.constructor = Gem;
+//--------------------------------------------------------------------------------------------------------- 
+
+// OrangeGem Class
+//---------------------------------------------------------------------------------------------------------
+var OrangeGem = function() {
+	Gem.call(this);
+	this.score = 5;
+	this.sprite= 'images/Gem Orange.png';
+
+	this.x = 3*(this.xStep/this.scale);
+	this.y = 3*(this.yStep/this.scale);
+};
+
+// link parts of BlueGem and Gem that are same for instances
+OrangeGem.prototype = Object.create(Gem.prototype); // OrangeGem.prototype obj delegates to Gem.prototype
+
+// The default prototype which we overwrote in previous line came with a .constructor property
+// We need to add this back to our version of the protptype object
+OrangeGem.prototype.constructor = Gem;
 //--------------------------------------------------------------------------------------------------------- 
 
 // a handleInput() method.
@@ -316,6 +449,7 @@ function ApplicationException(message) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
+var allCollectables = [new Heart(), new BlueGem(), new GreenGem(), new OrangeGem()];
 var player = new Player();
 var playerStats = new PlayerStats(player);
 var gameEndBanner = new GameEndBanner();
