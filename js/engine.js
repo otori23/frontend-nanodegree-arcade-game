@@ -110,6 +110,7 @@ var Engine = (function(global) {
 	 * start position of the player.
      */
 	function checkCollisions() {
+		// Enemies
 		for(var i = 0; i < allEnemies.length; i++) {
 			if(player.collidesWith(allEnemies[i])) {
 				player.resetPosition();
@@ -192,7 +193,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        Collectable.place();
     }
 
     /* Go ahead and load all of the images we know we're going to need to

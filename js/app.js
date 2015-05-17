@@ -13,6 +13,12 @@ Entity.prototype.xStep = 101;
 // # of pixels that translates to one step in the y direction
 Entity.prototype.yStep = 83;
 
+// a list of rows from which an Enemy instance will randomly select from
+Entity.prototype.rows = [1, 2, 3];
+
+// a list of rows from which an Enemy instance will randomly select from
+Entity.prototype.columns = [0, 1, 2, 3, 4];
+
 // The abstract update method needs to be overridden in the derived classes
 Entity.prototype.update = function(dt) {
 	throw new ApplicationException("Entity update method needs an implementation.");
@@ -56,9 +62,6 @@ Enemy.prototype.constructor = Entity;
 
 // a list of speeds from which an Enemy instance will randomly select from
 Enemy.prototype.speeds = [150, 175, 200, 300, 400, 400, 400];
-
-// a list of rows from which an Enemy instance will randomly select from
-Enemy.prototype.rows = [1, 2, 3];
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -126,6 +129,7 @@ Player.prototype.update = function() {
 		    if(this.y < 0) {
 				this.resetPosition();
 				this.score++;
+				Collectable.place();
 			}
 		    break;
 		case 'right':
@@ -192,6 +196,7 @@ Player.prototype.reset = function() {
 	this.y = this.yStart;
 	this.score = 0;
 	this.lives = 3;
+	Collectable.place();
 }
 
 // PlayerStat Class
@@ -292,6 +297,47 @@ var Collectable = function() {
 	this.xStart = -this.xStep;
 	this.yStart = 0;
 	this.resetPosition();
+	this.moveEvent = '';
+	this.moveCoord = [];
+	Collectable.generateCoordList();
+};
+
+Collectable.generateCoordList = function() {
+	Collectable.coordList = [];
+	var cols = Entity.prototype.columns;
+	var rows = Entity.prototype.rows;
+	for(var i = 0; i < cols.length; i++) {
+		for(var j = 0; j < rows.length; j++) {
+			Collectable.coordList.push([cols[i], rows[j]]);
+		}
+	}
+};
+
+Collectable.getNextCoord = function() {
+	var len = Collectable.coordList.length;
+	if(len === 0) {
+		throw new ApplicationException("Collectable Coord List is Empty.");
+	}
+
+	var i = Math.floor(Math.random() * len);
+	return Collectable.coordList.splice(i, 1)[0];
+};
+
+Collectable.place = function() {
+	indices = [];
+	for(var i = 0; i < allCollectables.length; i++) {
+		allCollectables[i].resetPosition();
+		indices.push(i);
+	}
+	Collectable.generateCoordList();
+	numUsedCollectables = [0, 1, 2, 3].randomElement();
+
+	for(var i = 0; i < numUsedCollectables; i++) {
+		index = Math.floor(Math.random() * indices.length);
+		index = indices.splice(index, 1)[0];
+		allCollectables[index].moveEvent = 'place';
+		allCollectables[index].moveCoord = Collectable.getNextCoord();
+	}
 };
 
 // link parts of Collectable and Entity that are same for instances
@@ -311,7 +357,16 @@ Collectable.prototype.xStep = Entity.prototype.xStep / Collectable.prototype.sca
 Collectable.prototype.yStep = Entity.prototype.yStep / Collectable.prototype.scale;
 
 Collectable.prototype.update = function(dt) {
-	// do nothing
+	switch(this.moveEvent) {
+		case 'place':
+			this.x = this.moveCoord[0] * this.xStep;
+			this.y = this.moveCoord[1] * this.yStep;
+			break;
+		case 'collision':
+			this.resetPosition();
+			break;
+	}
+	this.moveEvent = '';
 };
 
 Collectable.prototype.render = function() {
