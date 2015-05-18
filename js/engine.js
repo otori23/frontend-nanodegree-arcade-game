@@ -47,7 +47,7 @@ var Engine = (function(global) {
          */
         update(dt);
         render();
-
+		
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
@@ -112,10 +112,12 @@ var Engine = (function(global) {
 	function checkCollisions() {
 		// Enemies
 		for(var i = 0; i < allEnemies.length; i++) {
-			if(player.collidesWith(allEnemies[i])) {
-				player.resetPosition();
-				break;
-			}
+			if(player.collidesWith(allEnemies[i])) break;
+		}
+
+		// Collectables
+		for(var i = 0; i < allCollectables.length; i++) {
+			if(player.collidesWith(allCollectables[i])) break;
 		}
 	}
 

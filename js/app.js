@@ -24,6 +24,10 @@ Entity.prototype.update = function(dt) {
 	throw new ApplicationException("Entity update method needs an implementation.");
 };
 
+Entity.prototype.updatePlayerStats = function(aPlayer) {
+	throw new ApplicationException("Entity updatePlayerStats method needs an implementation.");
+};
+
 // Default implementation of how to render an Entity
 Entity.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -32,6 +36,22 @@ Entity.prototype.render = function() {
 Entity.prototype.resetPosition = function() {
 	this.x = this.xStart;
 	this.y = this.yStart;
+};
+
+Entity.prototype.getX = function() {
+	return this.x;
+};
+
+Entity.prototype.getY = function() {
+	return this.y;
+};
+
+Entity.prototype.getXstep = function() {
+	return this.xStep;
+};
+
+Entity.prototype.getYstep = function() {
+	return this.yStep;
 };
 
 // Enemy Class
@@ -81,6 +101,12 @@ Enemy.prototype.update = function(dt) {
 	else {
 		this.x += this.speed*dt;
 	}
+};
+
+Enemy.prototype.updatePlayerStats = function(aPlayer) {
+	aPlayer.lives--;
+	if(aPlayer.lives < 0) aPlayer.lives = 0;
+	player.resetPosition();
 };
 
 // Player Class
@@ -158,15 +184,14 @@ Player.prototype.handleInput = function(cmd) {
 // compare bounding rectangles of player and specified entity to check for a collision.
 Player.prototype.collidesWith = function(entity) {
 	var collision = !( 
-		(entity.x + this.xStep < player.x + 50)   ||
-		(entity.x > player.x + 50)  ||
-		(entity.y > player.y + 40) ||
-		(entity.y + this.yStep < player.y + 40)
+		(entity.getX() + this.getXstep() < player.getX() + 50)   ||
+		(entity.getX() > player.getX() + 50)  ||
+		(entity.getY() > player.getY() + 40) ||
+		(entity.getY() + this.getYstep() < player.getY() + 40)
 	);
 
 	if(collision) {
-		this.lives--;
-		if(this.lives < 0) this.lives = 0;
+		entity.updatePlayerStats(this);
 	}
 	return collision;
 };
@@ -382,6 +407,23 @@ Collectable.prototype.render = function() {
 Collectable.prototype.updatePlayerStats = function(aPlayer) {
 	var newScore = aPlayer.getScore() + this.score;
 	aPlayer.setScore(newScore);
+	this.resetPosition();
+};
+
+Collectable.prototype.getX = function() {
+	return this.x * this.scale;
+};
+
+Collectable.prototype.getY = function() {
+	return this.y * this.scale;
+};
+
+Collectable.prototype.getXstep = function() {
+	return this.xStep * this.scale;
+};
+
+Collectable.prototype.getYstep = function() {
+	return this.yStep * this.scale;
 };
 //--------------------------------------------------------------------------------------------------------- 
 
@@ -404,6 +446,7 @@ Heart.prototype.constructor = Collectable;
 Heart.prototype.updatePlayerStats = function(aPlayer) {
 	var numLives = aPlayer.getLives() + this.score;
 	aPlayer.setLives(numLives);
+	this.resetPosition();
 };
 //--------------------------------------------------------------------------------------------------------- 
 
