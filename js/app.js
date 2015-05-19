@@ -151,7 +151,7 @@ Player.prototype.update = function() {
 	switch(this.moveEvent) {
 		case 'left':
 			this.x -= this.xStep;
-		    if(this.x < 0) this.x += this.xStep
+		    if(this.x < 0) this.x += this.xStep;
 		    break;
 		case 'up':
 			this.y -= this.yStep;
@@ -163,11 +163,11 @@ Player.prototype.update = function() {
 		    break;
 		case 'right':
 			this.x += this.xStep;
-		    if(this.x > canvas.width - playerImg.width) this.x -= this.xStep
+		    if(this.x > canvas.width - playerImg.width) this.x -= this.xStep;
 		    break;
 		case 'down':
 			this.y += this.yStep;
-			if(this.y > canvas.height - playerImg.height) this.y -= this.yStep
+			if(this.y > canvas.height - playerImg.height) this.y -= this.yStep;
 			break;
 		default:
 			break;
@@ -182,6 +182,19 @@ Player.prototype.handleInput = function(cmd) {
 		return;
 	}
 	this.moveEvent = cmd;
+};
+
+// Check player against all enemy and collectable entities for collision
+Player.prototype.checkCollisions = function() {
+	// Enemies
+	for(var i = 0; i < allEnemies.length; i++) {
+		if(this.collidesWith(allEnemies[i])) break;
+	}
+
+	// Collectables
+	for(var i = 0; i < allCollectables.length; i++) {
+		if(this.collidesWith(allCollectables[i])) break;
+	}
 };
 
 // compare bounding rectangles of player and specified entity to check for a collision.

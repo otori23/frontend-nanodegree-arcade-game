@@ -103,22 +103,13 @@ var Engine = (function(global) {
 		playerStats.update();
     }
 
-	/* This is called by the update function  and loops through all of the
-     * objects within your allEnemies array as defined in app.js and passess
-	 * them as arguments to the collidesWith method of the player object.
-	 * If a collision is detected, the players position is reset to the predefined
-	 * start position of the player.
+	/* This is called by the update function. The player will loop through all 
+	 * of the objects within the allEnemies and allCollectables arrays as defined 
+	 * in app.js and passess them as arguments to the collidesWith method 
+	 * of the player object.
      */
 	function checkCollisions() {
-		// Enemies
-		for(var i = 0; i < allEnemies.length; i++) {
-			if(player.collidesWith(allEnemies[i])) break;
-		}
-
-		// Collectables
-		for(var i = 0; i < allCollectables.length; i++) {
-			if(player.collidesWith(allCollectables[i])) break;
-		}
+		player.checkCollisions();
 	}
 
     /* This function initially draws the "game level", it will then call
