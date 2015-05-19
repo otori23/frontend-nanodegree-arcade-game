@@ -3,25 +3,25 @@
 The objective of the game is to move the player character from the grass region at the bottom 
 of the game board, to the water region at the top of the game board.
 
-Open index.html, in a web browser, to begin game play
+Open index.html, in a web browser, to begin game play.
 
-Use the arrow keys on your keyboard to move the player on the game board
+Use the arrow keys on your keyboard to move the player on the game board.
 
 The game board displays the player's score and health statistics. The player's score is displayed 
-on the top left, and the player's health is displayed on the top right
+on the top left, and the player's health is displayed on the top right.
 
 The player can collect items on the game board. The collectable items are randomly selected and 
 placed on the game board. These items are:
-i)   Heart: adds +1 to player's health status
-ii)  Blue Gem: adds +1 to player's score
-iii) Green Gem: adds +3 to player's score
-iv)  Orange Gem: adds +5 to player's score
+* **Heart**: adds +1 to player's health status
+* **Blue Gem**: adds +1 to player's score
+* **Green Gem**: adds +3 to player's score
+* **Orange Gem**: adds +5 to player's score
 
 The placement of collectables happens at the beginning of the game, and on successfully reaching 
-the water region
+the water region.
 
 When the player's health status reaches 0, then game play ends. Press the "Esc" key to start a new
-game session
+game session.
 
 The relevant files in the project are:
 
