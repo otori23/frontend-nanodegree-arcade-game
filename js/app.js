@@ -13,22 +13,23 @@ Entity.prototype.xStep = 101;
 // # of pixels that translates to one step in the y direction
 Entity.prototype.yStep = 83;
 
-// a list of rows from which an Enemy instance will randomly select from
+// a list of rows from which none player entities will randomly select from
 Entity.prototype.rows = [1, 2, 3];
 
-// a list of rows from which an Enemy instance will randomly select from
+// a list of colums from which none player entities will randomly select from
 Entity.prototype.columns = [0, 1, 2, 3, 4];
 
-// The abstract update method needs to be overridden in the derived classes
+// the abstract update method needs to be overridden in the derived classes
 Entity.prototype.update = function(dt) {
 	throw new ApplicationException("Entity update method needs an implementation.");
 };
 
+// an abstract method defined by none player entites to update player's state on collision 
 Entity.prototype.updatePlayerStats = function(aPlayer) {
 	throw new ApplicationException("Entity updatePlayerStats method needs an implementation.");
 };
 
-// Default implementation of how to render an Entity
+// default implementation of how to render an entity
 Entity.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -53,6 +54,7 @@ Entity.prototype.getXstep = function() {
 Entity.prototype.getYstep = function() {
 	return this.yStep;
 };
+//--------------------------------------------------------------------------------------------------------- 
 
 // Enemy Class
 //---------------------------------------------------------------------------------------------------------
@@ -108,6 +110,7 @@ Enemy.prototype.updatePlayerStats = function(aPlayer) {
 	if(aPlayer.lives < 0) aPlayer.lives = 0;
 	player.resetPosition();
 };
+//--------------------------------------------------------------------------------------------------------- 
 
 // Player Class
 //---------------------------------------------------------------------------------------------------------
@@ -206,16 +209,17 @@ Player.prototype.setScore = function(score) {
 	this.score = score;
 }
 
-// getter for player's score
+// getter for player's lives
 Player.prototype.getLives = function() {
 	return this.lives;
 }
 
-// setter for player's score
+// setter for player's lives
 Player.prototype.setLives = function(lives) {
 	this.lives = lives;
 }
 
+// set player position to somewhere off-canvas
 Player.prototype.reset = function() {
 	this.x = this.xStart;
 	this.y = this.yStart;
@@ -223,10 +227,12 @@ Player.prototype.reset = function() {
 	this.lives = 3;
 	Collectable.place();
 }
+//--------------------------------------------------------------------------------------------------------- 
 
-// PlayerStat Class
+// PlayerStats Class
 //---------------------------------------------------------------------------------------------------------
 
+// Object model that represents player's score and health status 
 var PlayerStats = function(player) {
 	Entity.call(this);
 	this.x = 0;
@@ -270,8 +276,9 @@ PlayerStats.prototype.render = function() {
 
 	ctx.restore();
 };
+//--------------------------------------------------------------------------------------------------------- 
 
-// gameEndBanner Class
+// GameEndBanner Class
 //---------------------------------------------------------------------------------------------------------
 var GameEndBanner = function() {
 	Entity.call(this);
@@ -316,6 +323,8 @@ GameEndBanner.prototype.render = function() {
 
 // Collectable Class
 //---------------------------------------------------------------------------------------------------------
+
+// Object model that represents all collectables items in the game
 var Collectable = function() {
 	Entity.call(this);
 	this.score = 0;
@@ -327,6 +336,7 @@ var Collectable = function() {
 	Collectable.generateCoordList();
 };
 
+// Class method that is used to create all possible x,y positions that collectables can occupy
 Collectable.generateCoordList = function() {
 	Collectable.coordList = [];
 	var cols = Entity.prototype.columns;
@@ -338,6 +348,7 @@ Collectable.generateCoordList = function() {
 	}
 };
 
+// Class method that randomly selects an unused coordinate position to use for a collectable
 Collectable.getNextCoord = function() {
 	var len = Collectable.coordList.length;
 	if(len === 0) {
@@ -348,6 +359,7 @@ Collectable.getNextCoord = function() {
 	return Collectable.coordList.splice(i, 1)[0];
 };
 
+// Class method used to randomly select and randomly place collectables on the game board
 Collectable.place = function() {
 	indices = [];
 	for(var i = 0; i < allCollectables.length; i++) {
@@ -372,7 +384,7 @@ Collectable.prototype = Object.create(Entity.prototype); // Collectable.prototyp
 // We need to add this back to our version of the protptype object
 Collectable.prototype.constructor = Entity;
 
-// # of pixels that translates to one step in the y direction
+// Used to scale images for collectables
 Collectable.prototype.scale = 0.50;
 
 // # of pixels that translates to one step in the x direction
@@ -426,7 +438,6 @@ Collectable.prototype.getYstep = function() {
 	return this.yStep * this.scale;
 };
 //--------------------------------------------------------------------------------------------------------- 
-
 
 // Heart Class
 //---------------------------------------------------------------------------------------------------------
@@ -540,7 +551,10 @@ function ApplicationException(message) {
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
+// Place all collectable objects in an array called allCollectables
 // Place the player object in a variable called player
+// Place the player statistics objecet in a variable called platerStats
+// Place the end of game message object in a variable called gameEndBanner
 var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 var allCollectables = [new Heart(), new BlueGem(), new GreenGem(), new OrangeGem()];
 var player = new Player();

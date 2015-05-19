@@ -61,3 +61,9 @@ Once you have completed implementing the Player and Enemy, you should instantiat
 5) Adding your own
 
 If you would like you can add additional functionality to the game. You can add more code to the app.js file and to the Enemy and Player classes to accomplish that.
+
+6) Submission
+
+Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+
+for self-checking their submission.
