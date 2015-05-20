@@ -80,7 +80,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -102,15 +101,6 @@ var Engine = (function(global) {
         player.update();
 		playerStats.update();
     }
-
-	/* This is called by the update function. The player will loop through all 
-	 * of the objects within the allEnemies and allCollectables arrays as defined 
-	 * in app.js and passess them as arguments to the collidesWith method 
-	 * of the player object.
-     */
-	function checkCollisions() {
-		player.checkCollisions();
-	}
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every

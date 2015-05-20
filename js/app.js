@@ -172,6 +172,7 @@ Player.prototype.update = function() {
 		default:
 			break;
 	}
+	this.checkCollisions();
 	this.moveEvent = '';
 };
 
